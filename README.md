@@ -10,7 +10,7 @@ Simulate tty activity in background to prevent ssh stale connection (firewall ti
 ## features
 
 * background process to keepalive a ssh connection
-* send OSC Virtual Bell code to tty at defined interval
+* send OSC Virtual Bell code to tty at defined interval (generally ignored by terminal emulators)
 * exits when tty dies
 
 ## usage
