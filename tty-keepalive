@@ -12,30 +12,40 @@
 # exits when pseudo tty dies
 #
 # usage: tty-keepalive [<SECONDS>]
+#        tty-keepalive stop
 #
 # to add in shell rc-file:
 # tty-keepalive [<SECONDS>]
 #
 [ "$1" = -h ] && echo "usage: ${0##/} [<SECONDS>]" && exit 0
 [ -t 1 ] || exit 0
-TTY_CODE='\033]9;0\a' # Visual Bell
-
 PTS=$(tty 2>/dev/null)
 [ "$PTS" ] || exit 1
 [ -w "$PTS" ] || exit 1
-# check not already running for tty
+[ "$1" = stop ] && {
+  pkill -t ${PTS#/dev/} -f "tty-keepalive $PTS"
+  exit
+}
 [ ! "$_TTY_EXEC" ] && {
+  # check not already running for this tty
   pgrep -t ${PTS#/dev/} -f "tty-keepalive $PTS" >/dev/null 2>&1 && exit 
   _TTY_EXEC=1 exec "$0" "$PTS" "$@"
 }
 shift
 SLEEP=${1-120}
+TTY_CODE='\033]9;0\a' # Visual Bell
 printf "$TTY_CODE" 2>/dev/null >"$PTS" || exit 0
 (
-  trap exit SIGHUP
+  cleanup()
+  {
+    trap - HUP INT TERM EXIT
+    kill 0
+  }
+  trap cleanup HUP INT TERM EXIT
   while :; do
-    sleep $SLEEP
+    sleep $SLEEP &
+    wait
     [ -w "$PTS" ] || break
     printf "$TTY_CODE" >"$PTS"
   done
-) >/dev/null 2>&1 </dev/null &
+) &
