@@ -22,6 +22,7 @@ SLEEP=${1-120}
 PTS=$(tty)
 
 (
+  trap exit SIGHUP
   while :; do
     sleep $SLEEP
     [ -e "$PTS" ] || break
