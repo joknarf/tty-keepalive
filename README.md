@@ -1,4 +1,5 @@
 [![Joknarf Tools](https://img.shields.io/badge/Joknarf%20Tools-Visit-darkgreen?logo=github)](https://joknarf.github.io/joknarf-tools)
+[![Build and Release Packages](https://github.com/joknarf/tty-keepalive/actions/workflows/release.yml/badge.svg)](https://github.com/joknarf/tty-keepalive/actions/workflows/release.yml)
 [![Shell](https://img.shields.io/badge/shell-bash%20-blue.svg)]()
 [![Licence](https://img.shields.io/badge/licence-MIT-blue.svg)](https://shields.io/)
 
