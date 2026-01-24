@@ -13,8 +13,8 @@
 #
 # usage: tty-keepalive [<SECONDS>]
 #
-# in shell rc-file:
-# [ -t 1 ] && tty-keepalive [<SECONDS>]
+# to add in shell rc-file:
+# tty-keepalive [<SECONDS>]
 #
 [ "$1" = -h ] && echo "usage: ${0##/} [<SECONDS>]" && exit 0
 [ -t 1 ] || exit 0
