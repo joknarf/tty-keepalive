@@ -18,14 +18,19 @@
 #
 [ "$1" = -h ] && echo "usage: ${0##/} [<SECONDS>]" && exit 0
 [ -t 1 ] || exit 0
-SLEEP=${1-120}
 TTY_CODE='\033]9;0\a' # Visual Bell
+
 PTS=$(tty 2>/dev/null)
 [ "$PTS" ] || exit 1
 [ -w "$PTS" ] || exit 1
+# check not already running for tty
+[ ! "$_TTY_EXEC" ] && {
+  pgrep -t ${PTS#/dev/} -f "tty-keepalive $PTS" >/dev/null 2>&1 && exit 
+  _TTY_EXEC=1 exec "$0" "$PTS" "$@"
+}
+shift
+SLEEP=${1-120}
 printf "$TTY_CODE" 2>/dev/null >"$PTS" || exit 0
-PIDS=( $(pgrep -t ${PTS#/dev/} -x tty-keepalive 2>/dev/null) )
-(( ${#PIDS[@]} > 2 )) && exit 
 (
   trap exit SIGHUP
   while :; do
