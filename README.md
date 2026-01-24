@@ -9,7 +9,7 @@ Simulate tty activity in background to prevent stale/disconnected interactive se
 
 ## features
 
-* background process to keepalive a ssh connection
+* background process to keepalive an interactive shell session (ssh connection)
 * send OSC Virtual Bell code to tty at defined interval (silently ignored by terminal emulators)
 * exits when tty dies
 
