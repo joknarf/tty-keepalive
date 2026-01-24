@@ -25,7 +25,7 @@ PTS=$(tty 2>/dev/null)
 [ -w "$PTS" ] || exit 1
 printf "$TTY_CODE" 2>/dev/null >"$PTS" || exit 0
 PIDS=( $(pgrep -t ${PTS#/dev/} -x tty-keepalive 2>/dev/null) )
-(( ${#PIDS[@]} > 1 )) && exit 
+(( ${#PIDS[@]} > 2 )) && exit 
 (
   trap exit SIGHUP
   while :; do
