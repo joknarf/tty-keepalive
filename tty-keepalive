@@ -28,7 +28,7 @@ PTS=$(tty 2>/dev/null)
 }
 [ ! "$_TTY_EXEC" ] && {
   # check not already running for this tty
-  pgrep -t ${PTS#/dev/} -f "tty-keepalive $PTS" >/dev/null 2>&1 && exit 
+  pgrep -u $USER -f "tty-keepalive $PTS" >/dev/null 2>&1 && exit 
   _TTY_EXEC=1 exec "$0" "$PTS" "$@"
 }
 shift
