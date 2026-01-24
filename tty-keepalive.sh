@@ -17,10 +17,11 @@
 # [ -t 1 ] && tty-keepalive [<SECONDS>]
 #
 [ "$1" = -h ] && echo "usage: ${0##/} [<SECONDS>]" && exit 0
-
+[ -t 1 ] || exit 0
 SLEEP=${1-120}
 PTS=$(tty)
-
+PIDS=( $(pgrep -t ${PTS#/dev/} -x tty-keepalive) )
+(( ${#PIDS[@]} > 1 )) && exit 1
 (
   trap exit SIGHUP
   while :; do
