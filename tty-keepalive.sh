@@ -19,9 +19,10 @@
 [ "$1" = -h ] && echo "usage: ${0##/} [<SECONDS>]" && exit 0
 [ -t 1 ] || exit 0
 SLEEP=${1-120}
+TTY_CODE='\033]9;0\a' # Visual Bell
 PTS=$(tty 2>/dev/null)
 [ "$PTS" ] || exit 1
-TTY_CODE='\033]9;0\a' # Visual Bell
+[ -w "$PTS" ] || exit 1
 printf "$TTY_CODE" 2>/dev/null >"$PTS" || exit 0
 PIDS=( $(pgrep -t ${PTS#/dev/} -x tty-keepalive) )
 (( ${#PIDS[@]} > 1 )) && exit 
