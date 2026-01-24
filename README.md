@@ -20,7 +20,7 @@ tty-keepalive [<SECONDS>]
 ```
 in rc file:
 ```
-[ -t 1 ] && tty-keepalive [<SECONDS>]
+tty-keepalive [<SECONDS>]
 ```
 
 default `<SECONDS>`: 120
