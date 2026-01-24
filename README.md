@@ -5,7 +5,7 @@
 
 # tty-keepalive
 
-Simulate tty activity in background to prevent ssh stale connection (firewall timeout)
+Simulate tty activity in background to prevent ssh stale connection (TMOUT / firewall timeout)
 
 ## features
 
