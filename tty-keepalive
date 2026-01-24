@@ -19,23 +19,25 @@
 #
 [ "$1" = -h ] && echo "usage: ${0##/} [<SECONDS>]" && exit 0
 [ -t 1 ] || exit 0
-PTS=$(tty 2>/dev/null)
-[ "$PTS" ] || exit 1
-[ -w "$PTS" ] || exit 1
+DEVPTS=$(tty 2>/dev/null)
+[ "$DEVPTS" ] || exit 1
+[ -w "$DEVPTS" ] || exit 1
+PTS=${DEVPTS#/dev/}
 [ "$1" = stop ] && {
-  pkill -t ${PTS#/dev/} -f "tty-keepalive $PTS"
+  pkill -t ${PTS} -f "tty-keepalive $PTS"
   exit
 }
 [ ! "$_TTY_EXEC" ] && {
   # check not already running for this tty
-  pgrep -u $USER -f "tty-keepalive $PTS" >/dev/null 2>&1 && exit 
+  pgrep -t $PTS -f "tty-keepalive $PTS" >/dev/null 2>&1 && exit 
   _TTY_EXEC=1 exec "$0" "$PTS" "$@"
 }
 shift
 SLEEP=${1-120}
 TTY_CODE='\033]9;0\a' # Visual Bell
-printf "$TTY_CODE" 2>/dev/null >"$PTS" || exit 0
+printf "$TTY_CODE" 2>/dev/null >"$DEVPTS" || exit 0
 (
+  p=$$
   cleanup()
   {
     trap - HUP INT TERM EXIT
@@ -45,7 +47,8 @@ printf "$TTY_CODE" 2>/dev/null >"$PTS" || exit 0
   while :; do
     sleep $SLEEP &
     wait
-    [ -w "$PTS" ] || break
-    printf "$TTY_CODE" >"$PTS"
+    [ $(ps -p $p -o tty=) = "$PTS" ] || break
+    [ -w "$DEVPTS" ] || break
+    printf "$TTY_CODE" >"$DEVPTS"
   done
 ) &
