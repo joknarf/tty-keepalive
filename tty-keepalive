@@ -49,4 +49,4 @@ printf "$TTY_CODE" 2>/dev/null >/dev/tty || exit 0
     [ -w "$DEVPTS" ] || break
     printf "$TTY_CODE" 2>/dev/null >/dev/tty || break
   done
-) &
+) >/dev/null 2>&1 </dev/null &
