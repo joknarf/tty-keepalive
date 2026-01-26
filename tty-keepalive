@@ -40,7 +40,8 @@ printf "$TTY_CODE" 2>/dev/null >/dev/tty || exit 0
   cleanup()
   {
     trap - HUP INT TERM EXIT
-    kill 0
+    kill $!
+    exit
   }
   trap cleanup HUP INT TERM EXIT
   while :; do
