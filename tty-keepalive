@@ -26,7 +26,7 @@ DEVPTS=$(tty 2>/dev/null)
 SLEEP=${1-120}
 TTY_CODE='\033]9;0\a' # Visual Bell
 printf "$TTY_CODE" 2>/dev/null >/dev/tty || exit 1
-(
+exec bash <<EOF >/dev/null 2>&1  &
   cleanup()
   {
     trap - HUP INT TERM EXIT
@@ -41,5 +41,6 @@ printf "$TTY_CODE" 2>/dev/null >/dev/tty || exit 1
     printf "$TTY_CODE" 2>/dev/null >"$DEVPTS" || break
     printf "$TTY_CODE" 2>/dev/null >/dev/tty || break
   done
-) >/dev/null 2>&1 </dev/null &
+) 
+EOF
 echo export TTYK_PID="$!"
