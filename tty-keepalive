@@ -23,18 +23,18 @@
   echo unset TTYK_PID
   exit 0
 }
-[ "$TTYK_PID" ] && exit 0
+[ "$TTYK_PID" ] && ps -p "$TTYK_PID" >/dev/null && exit 0
 DEVPTS=$(tty 2>/dev/null)
 [ "$DEVPTS" ] || exit 1
 [ -w "$DEVPTS" ] || exit 1
 SLEEP=${1-120}
 TTY_CODE='\033]9;0\a' # Visual Bell
 printf "$TTY_CODE" 2>/dev/null >/dev/tty || exit 1
-exec bash <<EOF >/dev/null 2>&1  &
+exec bash <<EOF >/dev/null 2>&1 &
   cleanup()
   {
     trap - HUP INT TERM EXIT
-    kill $!
+    kill 0
     exit
   }
   trap cleanup HUP INT TERM EXIT
