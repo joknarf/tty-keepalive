@@ -18,11 +18,11 @@
 # tty-keepalive [<SECONDS>]
 #
 [ "$1" = -h ] && echo "usage: ${0##/} [<SECONDS>]" && exit 0
+[ "$1" = stop ] && [ "$TTYK_PID" ] && { kill "$TTYK_PID";echo unset TTYK_PID; }
 [ "$TTYK_PID" ] && exit 0
 DEVPTS=$(tty 2>/dev/null)
 [ "$DEVPTS" ] || exit 1
 [ -w "$DEVPTS" ] || exit 1
-[ "$1" = stop ] && [ "$TTYK_PID" ] && { kill "$TTYK_PID";echo unset TTYK_PID; }
 SLEEP=${1-120}
 TTY_CODE='\033]9;0\a' # Visual Bell
 printf "$TTY_CODE" 2>/dev/null >/dev/tty || exit 1
