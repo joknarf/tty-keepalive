@@ -18,7 +18,7 @@
 # tty-keepalive [<SECONDS>]
 #
 [ "$1" = -h ] && echo "usage: ${0##/} [<SECONDS>]" && exit 0
-[ "$1" = stop ] {
+[ "$1" = stop ] && {
   [ "$TTYK_PID" ] && kill "$TTYK_PID" 2>/dev/null
   echo unset TTYK_PID
   exit 0
