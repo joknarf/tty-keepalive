@@ -22,11 +22,10 @@ Clone the repository or use your package managers with [release](https://github.
 ## usage
 
 ```
-tty-keepalive [<SECONDS>]
-```
-in rc file:
-```
-tty-keepalive [<SECONDS>]
+eval $(tty-keepalive [<SECONDS>])
 ```
 
 default `<SECONDS>`: 120
+```
+eval $(tty-keepalive stop)
+```
