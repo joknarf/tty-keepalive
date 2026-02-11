@@ -11,31 +11,21 @@
 # (totally ignored by most tty emulators)
 # exits when pseudo tty dies
 #
-# usage: tty-keepalive [<SECONDS>]
-#        tty-keepalive stop
+# usage: eval $(tty-keepalive [<SECONDS>])
+#        eval $(tty-keepalive stop)
 #
 # to add in shell rc-file:
 # tty-keepalive [<SECONDS>]
 #
 [ "$1" = -h ] && echo "usage: ${0##/} [<SECONDS>]" && exit 0
-[ -t 1 ] || exit 0
+[ "$TTYK_PID" ] && exit 0
 DEVPTS=$(tty 2>/dev/null)
 [ "$DEVPTS" ] || exit 1
 [ -w "$DEVPTS" ] || exit 1
-PTS=${DEVPTS#/dev/}
-[ "$1" = stop ] && {
-  pkill -t $PTS -f "tty-keepalive $PTS"
-  exit
-}
-
-[ ! "$_TTY_EXEC" ] && {
-  pgrep -t $PTS -f "tty-keepalive $PTS" >/dev/null 2>&1 && exit
-  _TTY_EXEC=1 exec "$0" "$PTS" "$@"
-}
-shift
+[ "$1" = stop ] && [ "$TTYK_PID" ] && { kill "$TTYK_PID";echo unset TTYK_PID; }
 SLEEP=${1-120}
 TTY_CODE='\033]9;0\a' # Visual Bell
-printf "$TTY_CODE" 2>/dev/null >/dev/tty || exit 0
+printf "$TTY_CODE" 2>/dev/null >/dev/tty || exit 1
 (
   cleanup()
   {
@@ -48,6 +38,8 @@ printf "$TTY_CODE" 2>/dev/null >/dev/tty || exit 0
     sleep $SLEEP &
     wait
     [ -w "$DEVPTS" ] || break
+    printf "$TTY_CODE" 2>/dev/null >"$DEVPTS" || break
     printf "$TTY_CODE" 2>/dev/null >/dev/tty || break
   done
 ) >/dev/null 2>&1 </dev/null &
+echo export TTYK_PID="$!"
