@@ -7,7 +7,7 @@
 
 # tty-keepalive
 
-Simulate tty activity in background to prevent stale/disconnected interactive session ($TMOUT / firewall timeout)
+Simulate tty activity in background to prevent stale/disconnected interactive session (firewall timeout)
 
 ## features
 
