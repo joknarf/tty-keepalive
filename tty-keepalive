@@ -15,12 +15,12 @@
 #        eval $(tty-keepalive stop)
 #
 # to add in shell rc-file:
-# tty-keepalive [<SECONDS>]
+# eval $(tty-keepalive [<SECONDS>])
 #
 [ "$1" = -h ] && echo "usage: ${0##/} [<SECONDS>]" && exit 0
 [ "$1" = stop ] && {
   [ "$TTYK_PID" ] && kill "$TTYK_PID" 2>/dev/null
-  echo unset TTYK_PID
+  echo "unset TTYK_PID"
   exit 0
 }
 [ "$TTYK_PID" ] && ps -p "$TTYK_PID" >/dev/null && exit 0
